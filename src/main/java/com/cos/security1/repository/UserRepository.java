@@ -8,4 +8,5 @@ import com.cos.security1.entity.User;
 // @Repository가 없어도 IoC된다. JpaRepository를 상속했기 때문이다.
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+	public User findByUsername(String username);
 }

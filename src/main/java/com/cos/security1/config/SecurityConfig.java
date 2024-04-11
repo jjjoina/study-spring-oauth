@@ -33,7 +33,14 @@ public class SecurityConfig {
 		);
 		// 권한이 필요한 페이지 접근시 /login으로 이동
 		http.formLogin(formLogin ->
-			formLogin.loginPage("/loginForm"));
+			formLogin
+				.loginPage("/loginForm")
+				// login 주소가 호출되면 security가 낚아채서 대신 로그인을 진행해준다.
+				.loginProcessingUrl("/login")
+				// 로그인에 성공하면 /로 이동
+				// 특정 페이지로 접근 중에 로그인하면 다시 그 페이지로 보내준다.
+				.defaultSuccessUrl("/")
+		);
 
 		return http.build();
 	}
