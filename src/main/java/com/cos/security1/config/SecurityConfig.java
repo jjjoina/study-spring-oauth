@@ -5,11 +5,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity	// spring security filter(현재 클래스)가 spring security filter chain에 등록된다.
 public class SecurityConfig {
+
+	@Bean	// 해당 메서드가 return하는 object를 IoC로 등록해준다.
+	public BCryptPasswordEncoder encodePwd() {
+		return new BCryptPasswordEncoder();
+	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -27,7 +33,7 @@ public class SecurityConfig {
 		);
 		// 권한이 필요한 페이지 접근시 /login으로 이동
 		http.formLogin(formLogin ->
-			formLogin.loginPage("/login"));
+			formLogin.loginPage("/loginForm"));
 
 		return http.build();
 	}

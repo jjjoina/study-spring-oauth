@@ -1,11 +1,22 @@
 package com.cos.security1.controller;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller		// view를 return
+import com.cos.security1.entity.User;
+import com.cos.security1.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller        // view를 return
+@RequiredArgsConstructor
 public class IndexController {
+
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	// localhost:8080
 	// localhost:8080/
@@ -31,18 +42,27 @@ public class IndexController {
 		return "manager";
 	}
 
-	@GetMapping("/login")
-	public @ResponseBody String login() {
-		return "login";
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		return "loginForm";
 	}
 
-	@GetMapping("/join")
-	public @ResponseBody String join() {
-		return "join";
+	@GetMapping("/joinForm")
+	public String joinForm() {
+		return "joinForm";
 	}
 
-	@GetMapping("/joinProc")
-	public @ResponseBody String joinProc() {
-		return "회원가입 완료됨!";
+	@PostMapping("/join")
+	public String join(User user) {
+		System.out.println(user);
+		user.setRole("ROLE_USER");
+
+		// 패스워드 암호화
+		String rawPassword = user.getPassword();
+		String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+		user.setPassword(encPassword);
+
+		userRepository.save(user);
+		return "redirect:/loginForm";
 	}
 }
