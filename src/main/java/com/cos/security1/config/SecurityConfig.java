@@ -44,6 +44,11 @@ public class SecurityConfig {
 				// 특정 페이지로 접근 중에 로그인하면 다시 그 페이지로 보내준다.
 				.defaultSuccessUrl("/")
 		);
+		// OAuth
+		http.oauth2Login(oauth2Login ->
+			oauth2Login
+				.loginPage("/loginForm")	// 구글 로그인 완료된 뒤의 후처리가 필요함.
+		);
 
 		return http.build();
 	}
